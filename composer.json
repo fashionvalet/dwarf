@@ -3,11 +3,11 @@
     "description": "Elasticsearch PHP library wrapper",
     "type": "package",
     "require": {
-        "elasticsearch/elasticsearch": "~2.0@beta",
-        "illuminate/support": "5.1.*"
+        "elasticsearch/elasticsearch": "~2.0@beta"
     },
     "require-dev": {
-        "phpspec/phpspec": "~2.1"
+        "phpspec/phpspec": "~2.1",
+        "illuminate/support": "5.1.*"
     },
     "autoload": {
         "psr-4": {
