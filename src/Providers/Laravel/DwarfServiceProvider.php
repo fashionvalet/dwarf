@@ -12,6 +12,7 @@ class DwarfServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerElasticsearchClient();
+        $this->registerDwarfMiner();
     }
 
     /**
@@ -20,7 +21,7 @@ class DwarfServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['elasticsearch.client'];
+        return ['elasticsearch.client', 'fv.dwarf'];
     }
 
     /**
@@ -29,7 +30,7 @@ class DwarfServiceProvider extends ServiceProvider
      */
     protected function registerElasticsearchClient()
     {
-        $this->app->bindShared('elasticsearch.client', function($app) {
+        $this->app->bindShared('elasticsearch.client', function ($app) {
             $hosts = $app['config']->get('elasticsearch.hosts', ['http://127.0.0.1:9200']);
 
             return new Client::create()
@@ -44,6 +45,8 @@ class DwarfServiceProvider extends ServiceProvider
      */
     protected function registerDwarfMiner()
     {
-
+        $this->app->bindShared('fv.dwarf', function ($app) {
+            return new Miner($app['elasticsearch.client']);
+        });
     }
 }

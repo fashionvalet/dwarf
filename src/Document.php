@@ -21,6 +21,6 @@ class Document implements Contracts\DocumentInterface
 
     public function get()
     {
-        
+
     }
 }
