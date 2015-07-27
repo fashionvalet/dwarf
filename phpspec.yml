@@ -3,3 +3,10 @@ suites:
         namespace: Fv\Dwarf
         psr4_prefix: Fv\Dwarf
         src_path: src
+extensions:
+    - PhpSpec\Extension\CodeCoverageExtension
+code_coverage:
+  format:
+    - html
+  output:
+    html: coverage
