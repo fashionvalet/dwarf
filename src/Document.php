@@ -65,12 +65,15 @@ class Document extends Miner implements Contracts\DocumentInterface
 
         $results = $this->getClient()->search($params);
 
-        $response = ['total' => $results['hits']['total']];
+        $response = [];
         foreach ($results['hits']['hits'] as $result) {
             $response['hits'][] = $this->extractSource($result);
         }
 
-        return new Collection($response);
+        $collection = new Collection($response);
+        $collection->setTotal($results['hits']['total']);
+
+        return $collection;
     }
 
     /**
