@@ -154,6 +154,11 @@ class Document extends Miner implements Contracts\DocumentInterface
         return $this;
     }
 
+    /**
+     * [extractSource description]
+     * @param  [type] $source [description]
+     * @return [type]         [description]
+     */
     protected function extractSource($source)
     {
         $resource['id'] = $source['_id'];
