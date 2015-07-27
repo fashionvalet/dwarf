@@ -24,12 +24,10 @@ class Document extends Miner implements Contracts\DocumentInterface
         $params = $this->buildParameters([], ['id' => $resourceId]);
 
         try {
-            $response = $this->getClient()->get($params);
+            $result = $this->getClient()->get($params);
+            $response = $this->extractSource($result);
 
-            $resource = ['id' => $response['_id']];
-            $resource = array_merge($resource, $response['_source']);
-
-            return new Fluent($resource);
+            return $response;
         } catch (Missing404Exception $e) {
             return null;
         }
@@ -50,7 +48,9 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function first()
     {
+        $resources = $this->get();
 
+        return $resources->get('hits')[0];
     }
 
     /**
@@ -63,7 +63,14 @@ class Document extends Miner implements Contracts\DocumentInterface
 
         $params = $this->buildParameters($this->query);
 
-        return $this->getClient()->search($params);
+        $results = $this->getClient()->search($params);
+
+        $response = ['total' => $results['hits']['total']];
+        foreach ($results['hits']['hits'] as $result) {
+            $response['hits'][] = $this->extractSource($result);
+        }
+
+        return new Collection($response);
     }
 
     /**
@@ -142,5 +149,13 @@ class Document extends Miner implements Contracts\DocumentInterface
         $this->query['query'] = $query;
 
         return $this;
+    }
+
+    protected function extractSource($source)
+    {
+        $resource['id'] = $source['_id'];
+        $resource = array_merge($resource, $source['_source']);
+
+        return new Fluent($resource);
     }
 }
