@@ -95,6 +95,43 @@ abstract class Miner
     }
 
     /**
+     * [isIndexExists description]
+     * @param  [type]  $index [description]
+     * @return boolean        [description]
+     */
+    public function isIndexExists($index)
+    {
+        return $this->getClient()->indices()->exists(['index' => $this->getIndex()]);
+    }
+
+    /**
+     * [isTypeExists description]
+     * @param  [type]  $index [description]
+     * @param  [type]  $types [description]
+     * @return boolean        [description]
+     */
+    public function isTypeExists($index, $types)
+    {
+        return $this->getClient()->indices()->existsType([
+            'index' => $index,
+            'type' => $types
+        ]);
+    }
+
+    public function exists()
+    {
+        if (is_null($this->getIndex()) || ! $this->isIndexExists($this->getIndex())) {
+            throw new Exceptions\MissingIndexException("Index [{$this->getIndex()}] does not exists");
+        }
+
+        if (is_null($this->getType()) || ! $this->isTypeExists($this->getIndex(), $this->getType())) {
+            throw new Exceptions\MissingIndexTypeException("Index type [{$this->getType()}] for [{$this->getIndex()}] does not exists");
+        }
+
+        return true;
+    }
+
+    /**
      * [buildParameters description]
      * @param  [type] $body [description]
      * @param  [type] $args [description]

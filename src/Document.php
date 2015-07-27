@@ -19,6 +19,8 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function find($resourceId)
     {
+        $this->exists();
+
         $params = $this->buildParameters([], ['id' => $resourceId]);
 
         try {
@@ -57,7 +59,9 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function get()
     {
-        $params = $this->buildParameters($this->dump());
+        $this->exists();
+
+        $params = $this->buildParameters($this->query);
 
         return $this->getClient()->search($params);
     }
@@ -70,6 +74,8 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function insert(array $body, $resourceId = null)
     {
+        $this->exists();
+
         $args = [];
         if (! is_null($resourceId)) {
             $args = ['id' => $resourceId];
@@ -86,6 +92,8 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function update($resourceId, array $body)
     {
+        $this->exists();
+
         $params = $this->buildParameters(['doc' => $body], ['id' => $resourceId]);
 
         return $this->getClient()->update($params);
@@ -98,6 +106,8 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function delete($resourceId)
     {
+        $this->exists();
+
         $params = $this->buildParameters([], ['id' => $resourceId]);
 
         return $this->getClient()->delete($params);
@@ -118,7 +128,9 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function dump()
     {
-        return $this->query;
+        $params = $this->buildParameters($this->query);
+
+        return $params;
     }
 
     /**
