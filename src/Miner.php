@@ -12,12 +12,6 @@ abstract class Miner
     protected $client;
 
     /**
-     * [$document description]
-     * @var [type]
-     */
-    protected $document;
-
-    /**
      * [$index description]
      * @var [type]
      */
@@ -56,26 +50,6 @@ abstract class Miner
     public function getClient()
     {
         return $this->client;
-    }
-
-    /**
-     * [setDocument description]
-     * @param ContractsDocumentInterface $document [description]
-     */
-    public function setDocument(Contracts\DocumentInterface $document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * [getDocument description]
-     * @return [type] [description]
-     */
-    public function getDocument()
-    {
-        return $this->document;
     }
 
     /**

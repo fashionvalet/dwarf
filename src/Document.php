@@ -2,8 +2,7 @@
 
 namespace Fv\Dwarf;
 
-use Illuminate\Support\Fluent;
-use Illuminate\Support\Collection;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 class Document extends Miner implements Contracts\DocumentInterface
 {
@@ -22,7 +21,16 @@ class Document extends Miner implements Contracts\DocumentInterface
     {
         $params = $this->buildParameters([], ['id' => $resourceId]);
 
-        return $this->getClient()->get($params);
+        try {
+            $response = $this->getClient()->get($params);
+
+            $resource = ['id' => $response['_id']];
+            $resource = array_merge($resource, $response['_source']);
+
+            return new Fluent($resource);
+        } catch (Missing404Exception $e) {
+            return null;
+        }
     }
 
     /**
@@ -52,6 +60,47 @@ class Document extends Miner implements Contracts\DocumentInterface
         $params = $this->buildParameters($this->dump());
 
         return $this->getClient()->search($params);
+    }
+
+    /**
+     * [insert description]
+     * @param  array  $body       [description]
+     * @param  [type] $resourceId [description]
+     * @return [type]             [description]
+     */
+    public function insert(array $body, $resourceId = null)
+    {
+        $args = [];
+        if (! is_null($resourceId)) {
+            $args = ['id' => $resourceId];
+        }
+
+        $params = $this->buildParameters($body, $args);
+
+        return $this->getClient()->index($params);
+    }
+
+    /**
+     * [update description]
+     * @return [type] [description]
+     */
+    public function update($resourceId, array $body)
+    {
+        $params = $this->buildParameters(['doc' => $body], ['id' => $resourceId]);
+
+        return $this->getClient()->update($params);
+    }
+
+    /**
+     * [delete description]
+     * @param  [type] $resourceId [description]
+     * @return [type]             [description]
+     */
+    public function delete($resourceId)
+    {
+        $params = $this->buildParameters([], ['id' => $resourceId]);
+
+        return $this->getClient()->delete($params);
     }
 
     /**
