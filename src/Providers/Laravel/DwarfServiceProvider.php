@@ -46,7 +46,10 @@ class DwarfServiceProvider extends ServiceProvider
     protected function registerDwarfMiner()
     {
         $this->app->bindShared('fv.dwarf', function ($app) {
-            return new Miner($app['elasticsearch.client']);
+            $miner = new Miner($app['elasticsearch.client']);
+            $miner->setDocument(new Document);
+
+            return $miner;
         });
     }
 }

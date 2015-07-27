@@ -18,12 +18,25 @@ class Miner
     protected $document;
 
     /**
+     * [$index description]
+     * @var [type]
+     */
+    protected $index;
+
+    /**
+     * [$type description]
+     * @var [type]
+     */
+    protected $type;
+
+    /**
      * [__construct description]
      * @param Client $client [description]
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, Contracts\DocumentInterface $document)
     {
         $this->client = $client;
+        $this->document = $document;
     }
 
     /**
@@ -64,5 +77,47 @@ class Miner
     public function getDocument()
     {
         return $this->document;
+    }
+
+    /**
+     * [index description]
+     * @param  [type] $index [description]
+     * @return [type]        [description]
+     */
+    public function index($index)
+    {
+        $this->index = $index;
+
+        return $this;
+    }
+
+    /**
+     * [getIndex description]
+     * @return [type] [description]
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * [type description]
+     * @param  [type] $type [description]
+     * @return [type]       [description]
+     */
+    public function type($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * [getType description]
+     * @return [type] [description]
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
