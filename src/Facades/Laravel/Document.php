@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 
-class Elasticsearch extends Facade
+class Document extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -11,6 +11,6 @@ class Elasticsearch extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'elasticsearch.client';
+        return 'fv.dwarf.document';
     }
 }

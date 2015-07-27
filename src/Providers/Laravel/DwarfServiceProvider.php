@@ -12,7 +12,7 @@ class DwarfServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerElasticsearchClient();
-        $this->registerDwarfMiner();
+        $this->registerDwarfDocument();
     }
 
     /**
@@ -21,7 +21,7 @@ class DwarfServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['elasticsearch.client', 'fv.dwarf'];
+        return ['elasticsearch.client', 'fv.dwarf.document'];
     }
 
     /**
@@ -43,13 +43,10 @@ class DwarfServiceProvider extends ServiceProvider
      * [registerDwarfMiner description]
      * @return [type] [description]
      */
-    protected function registerDwarfMiner()
+    protected function registerDwarfDocument()
     {
-        $this->app->bindShared('fv.dwarf', function ($app) {
-            $miner = new Miner($app['elasticsearch.client']);
-            $miner->setDocument(new Document);
-
-            return $miner;
+        $this->app->bindShared('fv.dwarf.document', function ($app) {
+            return new Document($app['elasticsearch.client']);
         });
     }
 }
