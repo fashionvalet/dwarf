@@ -2,7 +2,7 @@
 
 use Elasticsearch\Client;
 
-class Miner
+abstract class Miner
 {
     /**
      * Elasticsearch client instance
@@ -33,10 +33,9 @@ class Miner
      * [__construct description]
      * @param Client $client [description]
      */
-    public function __construct(Client $client, Contracts\DocumentInterface $document)
+    public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->document = $document;
     }
 
     /**
@@ -119,5 +118,30 @@ class Miner
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * [buildParameters description]
+     * @param  [type] $body [description]
+     * @param  [type] $args [description]
+     * @return [type]       [description]
+     */
+    protected function buildParameters(array $body = [], array $args = [])
+    {
+        $params['index'] = $this->getIndex();
+
+        if (! is_null($this->getType())) {
+            $params['type'] = $this->getType();
+        }
+
+        if (! empty($body)) {
+            $params['body'] = $body;
+        }
+
+        if (! empty($args)) {
+            $params = array_merge($params, $args);
+        }
+
+        return $params;
     }
 }
