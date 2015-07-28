@@ -1,5 +1,7 @@
 <?php namespace Fv\Dwarf\Providers\Laravel;
 
+use Fv\Dwarf\Indexer;
+use Fv\Dwarf\Document;
 use Illuminate\Support\ServiceProvider;
 use Elasticsearch\ClientBuilder as Client;
 
@@ -13,6 +15,7 @@ class DwarfServiceProvider extends ServiceProvider
     {
         $this->registerElasticsearchClient();
         $this->registerDwarfDocument();
+        $this->registerDwarfIndexer();
     }
 
     /**
@@ -21,7 +24,7 @@ class DwarfServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['elasticsearch.client', 'fv.dwarf.document'];
+        return ['elasticsearch.client', 'fv.dwarf.document', 'fv.dwarf.indexer'];
     }
 
     /**
@@ -47,6 +50,13 @@ class DwarfServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('fv.dwarf.document', function ($app) {
             return new Document($app['elasticsearch.client']);
+        });
+    }
+
+    protected function registerDwarfIndexer()
+    {
+        $this->app->bindShared('fv.dwarf.indexer', function ($app) {
+            return new Indexer($app['elasticsearch.client']);
         });
     }
 }
