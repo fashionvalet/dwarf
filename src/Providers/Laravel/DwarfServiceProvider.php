@@ -33,7 +33,7 @@ class DwarfServiceProvider extends ServiceProvider
         $this->app->bindShared('elasticsearch.client', function ($app) {
             $hosts = $app['config']->get('elasticsearch.hosts', ['http://127.0.0.1:9200']);
 
-            return new Client::create()
+            return Client::create()
                 ->setHosts($hosts)
                 ->build();
         });
