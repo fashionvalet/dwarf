@@ -2,6 +2,7 @@
 
 namespace Fv\Dwarf;
 
+use Closure;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 class Document extends Miner implements Contracts\DocumentInterface
@@ -39,7 +40,7 @@ class Document extends Miner implements Contracts\DocumentInterface
      */
     public function all()
     {
-        return $this->whereMatchesAll()->get();
+        return $this->matchesAll()->get();
     }
 
     /**
@@ -124,12 +125,34 @@ class Document extends Miner implements Contracts\DocumentInterface
     }
 
     /**
+     * [where description]
+     * @param  Closure $query [description]
+     * @return [type]         [description]
+     */
+    public function where(Closure $query)
+    {
+        $query($this);
+
+        return $this;
+    }
+    
+    /**
      * [whereMatchesAll description]
      * @return [type] [description]
      */
-    public function whereMatchesAll()
+    public function matchesAll()
     {
         return $this->addToQuery(['match_all' => []]);
+    }
+
+    /**
+     * [raw description]
+     * @param  array  $query [description]
+     * @return [type]        [description]
+     */
+    public function raw(array $query)
+    {
+        return $this->addToQuery($query);
     }
 
     /**

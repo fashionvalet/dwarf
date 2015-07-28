@@ -199,7 +199,7 @@ class DocumentSpec extends ObjectBehavior
 
         $this->index('foo')
             ->type('foo')
-            ->whereMatchesAll()
+            ->matchesAll()
             ->first()
             ->shouldReturnAnInstanceOf('Fv\Dwarf\Fluent');
     }
@@ -218,14 +218,14 @@ class DocumentSpec extends ObjectBehavior
 
         $this->index('foo')
             ->type('foo')
-            ->whereMatchesAll()
+            ->matchesAll()
             ->dump()
             ->shouldReturn($stubResponse);
     }
 
     function it_sets_match_all_query()
     {
-        $this->whereMatchesAll()->shouldReturnAnInstanceOf($this);
+        $this->matchesAll()->shouldReturnAnInstanceOf($this);
     }
 
     function it_inserts_new_resource($client, $indices)
