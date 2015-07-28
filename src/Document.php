@@ -14,6 +14,18 @@ class Document extends Miner implements Contracts\DocumentInterface
     protected $query = [];
 
     /**
+     * [$from description]
+     * @var integer
+     */
+    protected $offset = 0;
+
+    /**
+     * [$size description]
+     * @var integer
+     */
+    protected $limit = 50;
+
+    /**
      * [find description]
      * @param  [type] $resourceId [description]
      * @return [type]             [description]
@@ -62,7 +74,7 @@ class Document extends Miner implements Contracts\DocumentInterface
     {
         $this->exists();
 
-        $params = $this->buildParameters($this->query);
+        $params = $this->buildParameters($this->query, ['from' => $this->getOffset(), 'size' => $this->getLimit()]);
 
         $results = $this->getClient()->search($params);
 
@@ -135,7 +147,7 @@ class Document extends Miner implements Contracts\DocumentInterface
 
         return $this;
     }
-    
+
     /**
      * [whereMatchesAll description]
      * @return [type] [description]
@@ -143,6 +155,20 @@ class Document extends Miner implements Contracts\DocumentInterface
     public function matchesAll()
     {
         return $this->addToQuery(['match_all' => []]);
+    }
+
+    public function offset($offset)
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
     }
 
     /**
@@ -164,6 +190,23 @@ class Document extends Miner implements Contracts\DocumentInterface
         $params = $this->buildParameters($this->query);
 
         return $params;
+    }
+
+    /**
+     * [getOffset description]
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * [getLimit description]
+     * @return [type] [description]
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
 
     /**
