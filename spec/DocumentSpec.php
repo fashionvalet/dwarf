@@ -141,8 +141,11 @@ class DocumentSpec extends ObjectBehavior
             'body' => [
                 'query' => [
                     'match_all' => []
-                ]
-            ]])
+                ],
+            ],
+            'from' => 0,
+            'size' => 50
+            ])
             ->shouldBeCalled()
             ->willReturn($stubResponse);
 
@@ -193,7 +196,10 @@ class DocumentSpec extends ObjectBehavior
                 'query' => [
                     'match_all' => []
                 ]
-            ]])
+            ],
+            'from' => 0,
+            'size' => 50
+            ])
             ->shouldBeCalled()
             ->willReturn($stubResponse);
 
@@ -230,6 +236,13 @@ class DocumentSpec extends ObjectBehavior
 
     function it_inserts_new_resource($client, $indices)
     {
+        $stubResponse = [
+            '_index' => 'foo',
+            '_type' => 'foo',
+            '_id' => 'foobar',
+            '_source' => []
+        ];
+
         $client->indices()
             ->shouldBeCalled()
             ->willReturn($indices);
@@ -249,16 +262,31 @@ class DocumentSpec extends ObjectBehavior
             'body' => ['foo' => 'bar']
         ])
         ->shouldBeCalled()
-        ->willReturn([]);
+        ->willReturn(['_id' => 'foobar']);
+
+        $client->get([
+            'index' => 'foo',
+            'type' => 'foo',
+            'id' => 'foobar'
+        ])
+        ->shouldBeCalled()
+        ->willReturn($stubResponse);
 
         $this->index('foo')
             ->type('foo')
             ->insert(['foo' => 'bar'], 'foobar')
-            ->shouldBeArray();
+            ->shouldReturnAnInstanceOf('Fv\Dwarf\Fluent');
     }
 
     function it_updates_existing_resource($client, $indices)
     {
+        $stubResponse = [
+            '_index' => 'foo',
+            '_type' => 'foo',
+            '_id' => 'foobar',
+            '_source' => []
+        ];
+
         $client->indices()
             ->shouldBeCalled()
             ->willReturn($indices);
@@ -282,12 +310,20 @@ class DocumentSpec extends ObjectBehavior
             ]
         ])
         ->shouldBeCalled()
-        ->willReturn([]);
+        ->willReturn(['_id' => 'foobar']);
+
+        $client->get([
+            'index' => 'foo',
+            'type' => 'foo',
+            'id' => 'foobar'
+        ])
+        ->shouldBeCalled()
+        ->willReturn($stubResponse);
 
         $this->index('foo')
             ->type('foo')
             ->update('foobar', ['foo' => 'bar'])
-            ->shouldBeArray();
+            ->shouldReturnAnInstanceOf('Fv\Dwarf\Fluent');
     }
 
     function it_deletes_existing_resource($client, $indices)

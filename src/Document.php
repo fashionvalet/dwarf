@@ -105,8 +105,9 @@ class Document extends Miner implements Contracts\DocumentInterface
         }
 
         $params = $this->buildParameters($body, $args);
+        $response = $this->getClient()->index($params);
 
-        return $this->getClient()->index($params);
+        return $this->find($response['_id']);
     }
 
     /**
@@ -118,8 +119,9 @@ class Document extends Miner implements Contracts\DocumentInterface
         $this->exists();
 
         $params = $this->buildParameters(['doc' => $body], ['id' => $resourceId]);
+        $response = $this->getClient()->update($params);
 
-        return $this->getClient()->update($params);
+        return $this->find($response['_id']);
     }
 
     /**
